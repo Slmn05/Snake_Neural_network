@@ -23,8 +23,8 @@ square_size = 30
 start_pos = [60, 150]
 number_of_squares = int(max_x / square_size * max_y / square_size)
 top_scores = []
-data = [] 
-neural_size = [5, 75, 3] # input, inside layers, output SIZE
+data = []
+neural_size = [5, 90, 3] # input, inside layers, output SIZE
 
 
 def random_pos() : 
@@ -201,11 +201,11 @@ def mutate(weights, strength, mutation_rate):
         new_weights.append(w_new)
     return new_weights
 
-def next_gen(ai_pop_size, data, mutation = False):
+def next_gen(ai_pop_size, data, mutation = False, weights = []):
     global top_scores
     new_gen = []
     if not data :
-        return [AI() for i in range(ai_pop_size)]
+        return [AI(weights) for i in range(ai_pop_size)]
     
     top10 = ai_pop_size // 10 
     best_ai = sorted(data, key=lambda x: x[0], reverse=True)[:top10]
@@ -269,10 +269,18 @@ def ai_game(ai_s):
             ai.move()
             ai.value -= 1
 
-def train(ai_pop_size, gens):
-    for i in range(gens):
-        print("gen :", i)         
-        ai_game(next_gen(ai_pop_size, data, True))
+def train(ai_pop_size, gens, weights = []): # data = [score, weights] ; weights = [w1,w2] expandable ??
+    if weights == []:
+        for i in range(gens):
+            print("gen :", i)         
+            ai_game(next_gen(ai_pop_size, data, True))
+    else :
+        print("Training with old weights")
+        ai_game(next_gen(ai_pop_size, data, False, weights))
+        for i in range(gens):
+            print("gen :", i)
+            ai_game(next_gen(ai_pop_size, data, True))
+
 
     pygame.init()
     screen = pygame.display.set_mode((max_x, max_y))
@@ -292,7 +300,6 @@ def train(ai_pop_size, gens):
 
     top_weights = sorted(data, key=lambda x: x[0], reverse=True)[0]
     best_ai = AI(top_weights[1])
-    play_game([best_ai], screen, clock)
     
     folder = 'training_logs'
     filename = 'best_ai.npz'

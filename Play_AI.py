@@ -2,7 +2,7 @@ import V3
 import numpy as np
 import pygame
 
-#V3.train(1000,200) ## train(pop_size, generations)
+
 
 file = './training_logs/best_ai.npz'
 data = np.load(file)
@@ -13,7 +13,8 @@ w2 = data['w2']
 for key in data.files:
     print(f"Layer Name: {key} | Shape: {data[key].shape}")
 
-
+V3.train(1000, 100, [w1, w2]) ## train(pop_size, generations, weights) keep training a already existing AI
+# V3.train(1000, 100) # Train a new AI
 pygame.init()
 screen = pygame.display.set_mode((V3.max_x, V3.max_y))
 pygame.display.set_caption("SNAKKKKKKE")
