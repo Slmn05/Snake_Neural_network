@@ -5,6 +5,11 @@ This project is a classic **Snake game** implemented in Python, with a **trainab
 
 You can either play the game manually or train/watch an AI learn how to play.
 
+## 🎮 Gameplay
+
+<p align="center">
+  <img src="training_logs\pop_size_1000_number_of_gens_200.png" width="500">
+</p>
 ---
 
 ## 🎮 Play the Game Yourself
