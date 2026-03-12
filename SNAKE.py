@@ -11,11 +11,21 @@ screen = pygame.display.set_mode((max_x, max_y))
 pygame.display.set_caption("SNAKKKKKKE")
 
 
-GREEN1 = (170, 215, 81)
-GREEN2 = (162, 209, 73)
-BLACK = (0, 0, 0)
-BLUE = (0, 0, 255)
-RED = (255, 0, 0)
+# GREEN1 = (170, 215, 81)
+# GREEN2 = (162, 209, 73)
+# BLACK = (0, 0, 0)
+# BLUE = (0, 0, 255)
+# RED = (255, 0, 0)
+
+GREEN1 = (34, 139, 34)   # Forest Green
+GREEN2 = (50, 205, 50)   # Lime Green
+RED = (200, 0, 0)
+DARK_RED = (150, 0, 0)
+WHITE = (255, 255, 255)
+BG_COLOR = (20, 20, 20)  # Dark theme
+GRID_COLOR = (30, 30, 30)
+
+
 square_size = 30
 number_of_squares = int(max_x / square_size * max_y / square_size)
 start_pos = [60, 150]
@@ -63,10 +73,30 @@ class Player:
                 self.last_pos.pop(0)
     
     def draw(self):
-        for pos in self.last_pos :
-            if pos != [0,0] :
-                pygame.draw.rect(screen, GREEN1, (*pos,square_size -1, square_size-1)) # Dessin du joueur 
-        pygame.draw.rect(screen, RED, (*self.apple_pos, square_size - 1, square_size - 1)) # Dessin de la pomme
+        # 1. Draw Background Grid
+        screen.fill(BG_COLOR)
+        for x in range(0, max_x, square_size):
+            pygame.draw.line(screen, GRID_COLOR, (x, 0), (x, max_y))
+        for y in range(0, max_y, square_size):
+            pygame.draw.line(screen, GRID_COLOR, (0, y), (max_x, y))
+
+        # 2. Draw Snake (with a 3D/Border effect)
+        for i, pos in enumerate(self.last_pos):
+            if pos != [0, 0]:
+                # Main body
+                pygame.draw.rect(screen, GREEN1, (*pos, square_size - 1, square_size - 1))
+                # Shiny inner part
+                pygame.draw.rect(screen, GREEN2, (pos[0] + 4, pos[1] + 4, square_size - 9, square_size - 9))
+
+        # 3. Draw Apple (Circular or with a "stem" effect)
+        apple_rect = (*self.apple_pos, square_size - 2, square_size - 2)
+        pygame.draw.ellipse(screen, RED, apple_rect) # Makes the apple round
+        pygame.draw.ellipse(screen, DARK_RED, (self.apple_pos[0]+4, self.apple_pos[1]+2, 8, 8)) # Shine
+
+        # 4. Draw Score Counter
+        font = pygame.font.SysFont("Arial", 24, bold=True)
+        score_text = font.render(f"Apples: {self.score}", True, WHITE)
+        screen.blit(score_text, (10, 10))
     
     def game_over(self):
         print(f"Game Over! Final Score: {self.score}")
@@ -110,7 +140,6 @@ def ia_move(player):
 running = True
 
 while running:
-    screen.fill(BLACK)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False

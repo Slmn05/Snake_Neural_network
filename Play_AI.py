@@ -10,16 +10,13 @@ data = np.load(file)
 w1 = data['w1']
 w2 = data['w2']
 
-for key in data.files:
-    print(f"Layer Name: {key} | Shape: {data[key].shape}")
-
-V3.train(1000, 100, [w1, w2]) ## train(pop_size, generations, weights) keep training a already existing AI
+# V3.train(1000, 100, [w1, w2]) ## train(pop_size, generations, weights) keep training a already existing AI
 # V3.train(1000, 100) # Train a new AI
 pygame.init()
 screen = pygame.display.set_mode((V3.max_x, V3.max_y))
 pygame.display.set_caption("SNAKKKKKKE")
 clock = pygame.time.Clock()
-clock.tick(1000)
+#clock.tick(1000)
 best_ai = V3.AI([w1,w2])
 best_ai = [best_ai]
 

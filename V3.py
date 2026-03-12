@@ -8,11 +8,13 @@ gamemode = 2
 max_x = 480
 max_y = 480 
 
-GREEN1 = (170, 215, 81)
-GREEN2 = (162, 209, 73)
-BLACK = (0, 0, 0)
-BLUE = (0, 0, 255)
-RED = (255, 0, 0)
+GREEN1 = (34, 139, 34)   # Forest Green
+GREEN2 = (50, 205, 50)   # Lime Green
+RED = (200, 0, 0)
+DARK_RED = (150, 0, 0)
+WHITE = (255, 255, 255)
+BG_COLOR = (20, 20, 20)  # Dark theme
+GRID_COLOR = (30, 30, 30)
 
 RIGHT = (1, 0)
 LEFT  = (-1, 0)
@@ -43,8 +45,8 @@ class AI:
             self.weights = weights
         self.apple_pos = random_pos()
         self.value = 0
-        self.length = 1
-        self.body =  [[60, 150]]
+        self.length = 3
+        self.body =  [[60, 150], [60, 150], [60, 150]]
         self.body_set = {(start_pos[0], start_pos[1])}
         self.pos = start_pos.copy()
         self.direction = RIGHT
@@ -101,29 +103,29 @@ class AI:
                 self.value -= 2
             if len(self.body) > self.length:
                 old_tail = self.body.pop(0) 
-                self.body_set.remove(tuple(old_tail))
+                self.body_set.discard(tuple(old_tail))
 
         if self.steps_left <= 0:
             self.game_over()
             
-    def draw_square(self, screen):
-        for pos in self.body :
-            if pos != [0,0] :
-                pygame.draw.rect(screen, GREEN1, (*pos, square_size-2, square_size-2)) # Dessin du joueur 
-        pygame.draw.rect(screen, RED, (*self.apple_pos, square_size - 2, square_size - 2)) # Dessin de la pomme
-    
-    def draw_circle(self, screen):
-        radius = (square_size - 1) // 2
-        
-        for i, pos in enumerate(self.body):
-            if pos == [0, 0]: continue
-            
-            center = (pos[0] + square_size // 2, pos[1] + square_size // 2)
-            color = BLUE if i == len(self.body) - 1 else GREEN1
-            pygame.draw.circle(screen, color, center, radius)
+    def draw(self, screen):
+        screen.fill(BG_COLOR)
+        for x in range(0, max_x, square_size):
+            pygame.draw.line(screen, GRID_COLOR, (x, 0), (x, max_y))
+        for y in range(0, max_y, square_size):
+            pygame.draw.line(screen, GRID_COLOR, (0, y), (max_x, y))
 
-        apple_center = (self.apple_pos[0] + square_size // 2, self.apple_pos[1] + square_size // 2)
-        pygame.draw.circle(screen, RED, apple_center, radius)
+        for i, pos in enumerate(self.body):
+                pygame.draw.rect(screen, GREEN1, (*pos, square_size - 1, square_size - 1))
+                pygame.draw.rect(screen, GREEN2, (pos[0] + 4, pos[1] + 4, square_size - 9, square_size - 9))
+
+        apple_rect = (*self.apple_pos, square_size - 2, square_size - 2)
+        pygame.draw.ellipse(screen, RED, apple_rect)
+        pygame.draw.ellipse(screen, DARK_RED, (self.apple_pos[0]+4, self.apple_pos[1]+2, 8, 8))
+
+        font = pygame.font.SysFont("Arial", 24, bold=True)
+        score_text = font.render(f"Apples: {self.length - 3 }", True, WHITE)
+        screen.blit(score_text, (10, 10))
         
     def score(self):
         return [self.value, self.weights]
@@ -229,7 +231,6 @@ def play_game(ai_s, screen, clock):
     for ai in ai_s:
         running = True
         while running:
-            screen.fill(BLACK)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -246,7 +247,7 @@ def play_game(ai_s, screen, clock):
             if not ai.alive:
                 running = False
 
-            ai.draw_square(screen)
+            ai.draw(screen)
             pygame.display.flip()
             clock.tick(10)
 
