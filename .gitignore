@@ -2,3 +2,10 @@ full_snake.py
 mu_5_vec_layers.py
 New_inputs.py
 pytorch.py
+
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/

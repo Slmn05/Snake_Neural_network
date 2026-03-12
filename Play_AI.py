@@ -2,7 +2,7 @@ import V3
 import numpy as np
 import pygame
 
-#V3.train(1000,200)
+#V3.train(1000,200) ## train(pop_size, generations)
 
 file = './training_logs/best_ai.npz'
 data = np.load(file)
