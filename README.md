@@ -30,7 +30,7 @@ python Play_AI.py
 If you want to continue training the existing AI, open **Play_AI.py** and uncomment the following line:
 
 ```python
-# V3.train(1000, 100, [w1, w2])
+V3.train(1000, 100, [w1, w2])
 ```
 
 This will train the AI for **100 generations** with a **population size of 1000**, starting from the current trained weights.
